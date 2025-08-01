@@ -1,0 +1,18 @@
+00:35:16.528694          LOG                      [0xB887]                 NR5G MAC PDSCH Status                                       1                        Length:   80
+00:35:16.528694
+00:35:16.528694	[0xB887]	NR5G MAC PDSCH Status
+Major.Minor = 2. 5
+Log Fields Change BMask = 0x0
+Sub ID = 0
+Num Records = 1
+Records
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |   |                     |      |PDSCH Status Info                                                                                                                                                                                                                                                                             |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |HARQ |    |    |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |       |       |       |       |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |Or   |    |K1  |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |RX     |RX     |RX     |RX     |
+   |   |                     |Num   |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |MBSFN|    |Or  |   |      |         |        |      |New |   |       |      |      |    |HD     |HARQ   |HD     |HARQ   |      |Is   |        |High |        |Antenna|Antenna|Antenna|Antenna|
+   |   |System Time          |PDSCH |Carrier|Tech|      |Conn|         |Band|Variant|Physical|        |TB   |        |SCS|   |Num |  |Area |RNTI|PMCH|   |Num   |Iteration|CRC     |CRC   |Tx  |   |Discard|Bypass|Bypass|Num |Onload |Onload |Offload|Offload|Did   |IOVec|        |Clock|        |Mapping|Mapping|Mapping|Mapping|
+   |#  |Slot|Numerology|Frame|Status|ID     |Id  |Opcode|ID  |Bandwidth|Type|Id     |cell ID |EARFCN  |Index|TB Size |MU |MCS|Rbs |RV|Id   |Type|ID  |TCI|Layers|Index    |State   |Status|Flag|NDI|Mode   |Decode|HARQ  |ReTx|Timeout|Timeout|Timeout|Timeout|Recomb|Valid|Mod Type|Mode |Num RX  |0      |1      |2      |3      |
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |  0|   0|     30kHz|  288|     2|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|     123|  1|  7|  10| 0|    2|   2|   1|  0|     1|        0|    PASS|  PASS|   1|  0|      0|     0|     0|   0|      0|      0|      0|      0|     0| true|    QPSK|    0|4x4_MIMO|      0|      0|      0|      0|
+   |   |    |          |     |      |      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|      72|  1|  8|   4| 0|    0|   0|   4|  0|     1|        0|    PASS|  PASS|   1|  1|      0|     0|     0|   0|      0|      0|      0|      0|     0| true|    QPSK|    0|4x4_MIMO|      0|      0|      0|      0|
