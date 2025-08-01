@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QXDM_PDSCH_MCS</title>
+  <style>
+  
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    textarea { width: 100%; height: 300px; font-family: monospace; }
+    button { margin-top: 10px; padding: 10px 20px; font-size: 16px; }
+    .table-group { margin-bottom: 30px; }
+    h4 { margin-bottom: 5px; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #e8e8e8;
+    }
+  </style>
+</head>
+<body>
+  <h2>QXDM_PDSCH_MCS</h2>
+	<p style="margin: 0;">Author: Dustin_Chen, email: <a href="mailto:Dustin_Chen@compal.com" style="line-height: 1;">Dustin_Chen@compal.com</a> or <a href="mailto:chuhpsdustin@gmail.com" style="line-height: 1;">chuhpsdustin@gmail.com</a></p>
+  <p>How to use: <br>
+  1. QXDM Options->Parsing Options->Export Parsed Text和QCAT Format勾起來，<br>
+  2. filter 出 [0xB887]	NR5G MAC PDSCH Status，<br>
+  3. 把多行Log直接ctrl+C複製，貼到底下，<br>
+  4. 按下Parse，就會擷取第 18, 20, 21, 22, 28 欄位：MCS, RV, HARQ Id, RNTI Type, CRC Status</p>
+  <textarea id="logInput" placeholder="請貼上多行 log，每行以 | 分隔..."></textarea>
+  <button onclick="parseLogs()">Parse</button>
+  <h3>結果：</h3>
+  <div id="output"></div>
+
+  <script>
+    function parseLogs() {
+      const input = document.getElementById('logInput').value;
+      const lines = input.split('\n');
+      const groupedResults = {};
+
+      const rntiTypeMap = {
+        '0': 'C_RNTI',
+        '1': 'T_C_RNTI',
+        '2': 'SI_RNTI',
+        '8': 'RA_RNTI'
+      };
+
+      for (let line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith('|')) continue;
+
+        const cols = trimmed.split('|').map(x => x.trim()).filter(x => x.length > 0);
+        if (cols.length >= 28) {
+          const mcs = cols[17];      // 第18欄，index17
+          const rv  = cols[19];      // 第20欄，index19
+          const harq = cols[20];     // 第21欄，index20
+          const rnti = cols[21];     // 第22欄，index21
+          const crc = cols[27];      // 第28欄，index27
+
+          // 過濾無效或標頭欄位
+          if (['MCS', 'CRC'].includes(mcs) || ['Bypass', 'Type', 'Id'].includes(harq) || ['Bypass', 'Type', 'Id'].includes(rnti) || ['Did', 'Status'].includes(crc)) continue;
+
+          const key = `${rnti}_${harq}`;
+          if (!groupedResults[key]) groupedResults[key] = [];
+          groupedResults[key].push({ mcs, rv, harq, rnti, crc });
+        }
+      }
+
+      const container = document.getElementById('output');
+      container.innerHTML = ''; // 清空上次結果
+
+      if (Object.keys(groupedResults).length === 0) {
+        container.textContent = '❌ 沒有找到有效資料，請確認輸入格式是否正確（每行須以 | 開頭且至少 28 欄）';
+        return;
+      }
+
+      for (const key in groupedResults) {
+        const group = groupedResults[key];
+        const rnti = group[0].rnti;
+        const harq = group[0].harq;
+        const rntiLabel = rntiTypeMap[rnti] || `RNTI Type=${rnti}`;
+
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'table-group';
+
+        const title = document.createElement('h4');
+        title.textContent = `# RNTI Type=${rntiLabel}, HARQ Id=${harq}`;
+        groupDiv.appendChild(title);
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+          <tr>
+            <th>MCS</th>
+            <th>RV</th>
+            <th>HARQ Id</th>
+            <th>RNTI Type</th>
+            <th>CRC Status</th>
+          </tr>
+        `;
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        for (const entry of group) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${entry.mcs}</td>
+            <td>${entry.rv}</td>
+            <td>${entry.harq}</td>
+            <td>${entry.rnti}</td>
+            <td>${entry.crc}</td>
+          `;
+          tbody.appendChild(row);
+        }
+
+        table.appendChild(tbody);
+        groupDiv.appendChild(table);
+        container.appendChild(groupDiv);
+      }
+    }
+  </script>
+</body>
+</html>

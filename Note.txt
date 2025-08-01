@@ -1,0 +1,115 @@
+寫一個html可以讀入如下
+第18, 20, 21, 22, 28欄的 MCS, RV, HARQ Id，RNTI Type，CRC status
+舉例底下 
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |   |                     |      |PDSCH Status Info                                                                                                                                                                                                                                                                             |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |HARQ |    |    |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |       |       |       |       |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |Or   |    |K1  |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |RX     |RX     |RX     |RX     |
+   |   |                     |Num   |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |MBSFN|    |Or  |   |      |         |        |      |New |   |       |      |      |    |HD     |HARQ   |HD     |HARQ   |      |Is   |        |High |        |Antenna|Antenna|Antenna|Antenna|
+   |   |System Time          |PDSCH |Carrier|Tech|      |Conn|         |Band|Variant|Physical|        |TB   |        |SCS|   |Num |  |Area |RNTI|PMCH|   |Num   |Iteration|CRC     |CRC   |Tx  |   |Discard|Bypass|Bypass|Num |Onload |Onload |Offload|Offload|Did   |IOVec|        |Clock|        |Mapping|Mapping|Mapping|Mapping|
+   |#  |Slot|Numerology|Frame|Status|ID     |Id  |Opcode|ID  |Bandwidth|Type|Id     |cell ID |EARFCN  |Index|TB Size |MU |MCS|Rbs |RV|Id   |Type|ID  |TCI|Layers|Index    |State   |Status|Flag|NDI|Mode   |Decode|HARQ  |ReTx|Timeout|Timeout|Timeout|Timeout|Recomb|Valid|Mod Type|Mode |Num RX  |0      |1      |2      |3      |
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |  0|  15|     30kHz|  420|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 0|    0|   0|   4|  0|     4|        0|    FAIL|  FAIL|   1|  1|      0|     1|     0|   0|      0|      0|      0|      0|     0|false|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+由左往右，MCS 是出現在第18個|之後，上面得到 MCS=18
+由左往右，RV 是出現在第20個|之後，上面得到 RV=0
+由左往右，HARQ Id 是出現在第21個|之後，上面得到 HARQ Id=0
+由左往右，RNTI Type 是出現在第22個|之後，上面得到 RNTI Type=0
+由左往右，CRC status 是出現在第28個|之後，上面得到 CRC status=FAIL
+第18, 21, 22, 28欄的MCS, HARQ Id，RNTI Type，CRC status分別是(12, 0,0,FAIL)
+
+舉例輸入底下
+1980/01/09 01:05:04.876774
+1980/01/09 01:05:04.876774	[0xB887]	NR5G MAC PDSCH Status
+Major.Minor = 2. 5
+Log Fields Change BMask = 0x0
+Sub ID = 0
+Num Records = 5
+Records
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |   |                     |      |PDSCH Status Info                                                                                                                                                                                                                                                                             |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |HARQ |    |    |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |       |       |       |       |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |Or   |    |K1  |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |RX     |RX     |RX     |RX     |
+   |   |                     |Num   |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |MBSFN|    |Or  |   |      |         |        |      |New |   |       |      |      |    |HD     |HARQ   |HD     |HARQ   |      |Is   |        |High |        |Antenna|Antenna|Antenna|Antenna|
+   |   |System Time          |PDSCH |Carrier|Tech|      |Conn|         |Band|Variant|Physical|        |TB   |        |SCS|   |Num |  |Area |RNTI|PMCH|   |Num   |Iteration|CRC     |CRC   |Tx  |   |Discard|Bypass|Bypass|Num |Onload |Onload |Offload|Offload|Did   |IOVec|        |Clock|        |Mapping|Mapping|Mapping|Mapping|
+   |#  |Slot|Numerology|Frame|Status|ID     |Id  |Opcode|ID  |Bandwidth|Type|Id     |cell ID |EARFCN  |Index|TB Size |MU |MCS|Rbs |RV|Id   |Type|ID  |TCI|Layers|Index    |State   |Status|Flag|NDI|Mode   |Decode|HARQ  |ReTx|Timeout|Timeout|Timeout|Timeout|Recomb|Valid|Mod Type|Mode |Num RX  |0      |1      |2      |3      |
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |  0|  15|     30kHz|  420|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 0|    0|   0|   4|  0|     4|        0|    FAIL|  FAIL|   1|  1|      0|     1|     0|   0|      0|      0|      0|      0|     0|false|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  1|  16|     30kHz|  420|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 0|   11|   0|   8|  0|     4|        0|    FAIL|  FAIL|   1|  1|      0|     1|     0|   0|      0|      0|      0|      0|     0|false|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  2|  17|     30kHz|  420|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   34847|  1| 12| 273| 0|   12|   0|   7|  0|     4|        0|    FAIL|  FAIL|   1|  0|      0|     1|     0|   0|      0|      0|      0|      0|     0|false|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  3|   0|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 0|    4|   0|   4|  0|     4|        0|    FAIL|  FAIL|   1|  1|      0|     1|     0|   0|      0|      0|      0|      0|     0|false|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  4|   1|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 0|    9|   0|   7|  0|     4|        0|    FAIL|  FAIL|   1|  0|      0|     1|     0|   0|      0|      0|      0|      0|     0|false|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+1980/01/09 01:05:04.884901LOG                      [0xB887]                 NR5G MAC PDSCH Status                                       1                        Length:  228
+1980/01/09 01:05:04.884901
+1980/01/09 01:05:04.884901	[0xB887]	NR5G MAC PDSCH Status
+Major.Minor = 2. 5
+Log Fields Change BMask = 0x0
+Sub ID = 0
+Num Records = 7
+Records
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |   |                     |      |PDSCH Status Info                                                                                                                                                                                                                                                                             |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |HARQ |    |    |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |       |       |       |       |
+   |   |                     |      |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |Or   |    |K1  |   |      |         |        |      |    |   |       |      |      |    |       |       |       |       |      |     |        |     |        |RX     |RX     |RX     |RX     |
+   |   |                     |Num   |       |    |      |    |         |    |       |        |        |     |        |   |   |    |  |MBSFN|    |Or  |   |      |         |        |      |New |   |       |      |      |    |HD     |HARQ   |HD     |HARQ   |      |Is   |        |High |        |Antenna|Antenna|Antenna|Antenna|
+   |   |System Time          |PDSCH |Carrier|Tech|      |Conn|         |Band|Variant|Physical|        |TB   |        |SCS|   |Num |  |Area |RNTI|PMCH|   |Num   |Iteration|CRC     |CRC   |Tx  |   |Discard|Bypass|Bypass|Num |Onload |Onload |Offload|Offload|Did   |IOVec|        |Clock|        |Mapping|Mapping|Mapping|Mapping|
+   |#  |Slot|Numerology|Frame|Status|ID     |Id  |Opcode|ID  |Bandwidth|Type|Id     |cell ID |EARFCN  |Index|TB Size |MU |MCS|Rbs |RV|Id   |Type|ID  |TCI|Layers|Index    |State   |Status|Flag|NDI|Mode   |Decode|HARQ  |ReTx|Timeout|Timeout|Timeout|Timeout|Recomb|Valid|Mod Type|Mode |Num RX  |0      |1      |2      |3      |
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   |  0|  10|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 2|    0|   0|   4|  0|     4|        0|    PASS|  PASS|   0|  1|      0|     0|     0|   1|      0|      0|      0|      0|     1| true|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  1|  11|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 2|   11|   0|   7|  0|     4|        0|    PASS|  PASS|   0|  1|      0|     0|     0|   1|      0|      0|      0|      0|     1| true|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  2|  12|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 2|    4|   0|   6|  0|     4|        0|    PASS|  PASS|   0|  1|      0|     0|     0|   1|      0|      0|      0|      0|     1| true|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  3|  13|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   34847|  1| 12| 273| 2|   12|   0|   5|  0|     4|        0|    PASS|  PASS|   0|  0|      0|     0|     0|   1|      0|      0|      0|      0|     1| true|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  4|  15|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 2|    9|   0|   4|  0|     4|        0|    PASS|  PASS|   0|  0|      0|     0|     0|   1|      0|      0|      0|      0|     1| true|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  5|  16|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   54285|  1| 12| 273| 2|   14|   0|   8|  0|     4|        0|    PASS|  PASS|   0|  0|      0|     0|     0|   1|      0|      0|      0|      0|     1| true|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+   |  6|  17|     30kHz|  421|     1|      0|   1|     0|   0|       12|   0|      0|     186|  644736|    0|   34847|  1| 12| 273| 2|    8|   0|   7|  0|     4|        0|    PASS|  PASS|   0|  1|      0|     0|     0|   1|      0|      0|      0|      0|     1| true|  64_QAM|    0|4x4_MIMO|      0|      0|      0|      0|
+
+可以parse出
+(MCS, HARQ Id，RNTI Type，CRC status)=
+(12, 0,0,FAIL)
+(12, 11,0,FAIL)
+(12, 12,0,FAIL)
+(12, 4,0,FAIL)
+(12, 9,0,FAIL)
+
+(12, 0,0,PASS)
+(12, 11,0,PASS)
+(12, 4,0,PASS)
+(12, 12,0,PASS)
+(12, 9,0,PASS)
+(12, 14,0,PASS)
+(12, 8,0,PASS)
+將同一個(RNTI Type, HARQ Id)結果輸出在一起，RNTI Type的數字後方標註是哪種RNTI
+
+SI_RNTI => RNTI Type=2
+RA_RNTI => RNTI Type=8
+T_C_RNTI=> RNTI Type=1
+C_RNTI  => RNTI Type=0
+
+舉例輸出:
+# RNTI Type=C_RNTI, HARQ Id=0  底下用表格
+MCS | HARQ Id | RNTI Type | CRC status
+---------------------------------------
+12 | 0 | 0 | FAIL
+12 | 0 | 0 | PASS
+
+# RNTI Type=C_RNTI, HARQ Id=11  底下用表格
+MCS | HARQ Id | RNTI Type | CRC status
+---------------------------------------
+11 | 0 | 0 | FAIL
+11 | 0 | 0 | PASS
+
+希望由上面表格連續結果，求出4個未知數 dlLaStepup, dlLaStepdown, BasedMcs, size
+舉例假設:
+dlLaStepup=3，如果遇到CRC PASS: deltaMcs就 +3
+dlLaStepdown=30，如果遇到CRC FAIL: deltaMcs就 -30
+unit=100
+BasedMcs=1300
+deltaMcs是連續累積可能是dlLaStepup或dlLaStepdown，根據CRC是PASS或FAIL
+計算公式
+mcs = (BasedMcs + deltaMcs)/unit 取整數
+1. FAIL => mcs =(1300-30)/100=12
+2. FAIL => mcs =(1300-60)/100=12
+3. PASS => mcs =(1300-57)/100=12
+4. PASS => mcs =(1300-54)/100=12
+5. FAIL => mcs =(1300-84)/100=12
+6. PASS => mcs =(1300-81)/100=12
+7. FAIL => mcs =(1300-111)/100=11
