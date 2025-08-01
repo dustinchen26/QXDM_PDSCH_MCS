@@ -64,7 +64,6 @@
       const input = document.getElementById('logInput').value;
       const lines = input.split('\n');
       const groupedResults = {};
-
       const rntiTypeMap = {
         '0': 'C_RNTI',
         '1': 'T_C_RNTI',
@@ -73,35 +72,49 @@
         '8': 'RA_RNTI'
       };
 
+      let lastValidCols = [];
+
       for (let line of lines) {
         const trimmed = line.trim();
         if (!trimmed.startsWith('|')) continue;
 
-        const cols = trimmed.split('|').map(x => x.trim()).filter(x => x.length > 0);
-        if (cols.length >= 28) {
-          const pci = cols[12];      // 新增 PCI
-          const frame = cols[3];
-          const slot = cols[1];
-          const mcs = cols[17];
-          const rbs = cols[18];
-          const rv  = cols[19];
-          const harq = cols[20];
-          const rnti = cols[21];
-          const crc = cols[27];
+        const cols = line.split('|').map(x => x.trim());
+        if (cols.length < 48) continue;
 
-          if (['MCS', 'CRC'].includes(mcs) || ['Bypass', 'Type', 'Id'].includes(harq) || ['Bypass', 'Type', 'Id'].includes(rnti) || ['Did', 'Status'].includes(crc)) continue;
+        const isContinuationLine = cols[1] === '' && cols[2] === '';
 
-          const key = `${rnti}_${harq}`;
-          if (!groupedResults[key]) groupedResults[key] = [];
-          groupedResults[key].push({ pci, frame, slot, mcs, rbs, rv, harq, rnti, crc });
+        if (isContinuationLine && lastValidCols.length > 0) {
+          for (let i = 0; i < 13; i++) {
+            if (!cols[i + 1]) cols[i + 1] = lastValidCols[i + 1];
+          }
+        } else {
+          lastValidCols = [...cols];
         }
+
+        if (cols.length < 28) continue;
+
+        const pci = cols[13];
+        const frame = cols[4];
+        const slot = cols[2];
+        const mcs = cols[18];
+        const rbs = cols[19];
+        const rv  = cols[20];
+        const harq = cols[21];
+        const rnti = cols[22];
+        const crc = cols[28];
+
+        if (['MCS', 'CRC'].includes(mcs) || ['Bypass', 'Type', 'Id'].includes(harq) || ['Bypass', 'Type', 'Id'].includes(rnti) || ['Did', 'Status'].includes(crc)) continue;
+
+        const key = `${rnti}_${harq}`;
+        if (!groupedResults[key]) groupedResults[key] = [];
+        groupedResults[key].push({ pci, frame, slot, mcs, rbs, rv, harq, rnti, crc });
       }
 
       const container = document.getElementById('output');
       container.innerHTML = '';
 
       if (Object.keys(groupedResults).length === 0) {
-        container.textContent = '❌ 沒有找到有效資料，請確認輸入格式是否正確（每行須以 | 開頭且至少 28 欄）';
+        container.textContent = '❌ 沒有找到有效資料，請確認輸入格式是否正確（僅接受完整列與延續列）';
         return;
       }
 
