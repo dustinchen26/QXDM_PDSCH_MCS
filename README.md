@@ -77,15 +77,15 @@ Records
 ## Example output
 ```
 # RNTI Type=SI_RNTI, HARQ Id=0
-MCS	RV	HARQ Id	RNTI Type	CRC Status
-9	0	0	2	PASS
+PCI	Frame	Slot	MCS	Rbs	RV	HARQ Id	RNTI Type	CRC Status
+186	426	1	9	6	0	0	2	PASS
 # RNTI Type=RA_RNTI, HARQ Id=0
-MCS	RV	HARQ Id	RNTI Type	CRC Status
-1	0	0	8	PASS
+PCI	Frame	Slot	MCS	Rbs	RV	HARQ Id	RNTI Type	CRC Status
+186	438	6	1	4	0	0	8	PASS
 # RNTI Type=T_C_RNTI, HARQ Id=0
-MCS	RV	HARQ Id	RNTI Type	CRC Status
-5	0	0	1	PASS
+PCI	Frame	Slot	MCS	Rbs	RV	HARQ Id	RNTI Type	CRC Status
+186	439	1	5	4	0	0	1	PASS
 # RNTI Type=C_RNTI, HARQ Id=1
-MCS	RV	HARQ Id	RNTI Type	CRC Status
-5	0	1	0	PASS
+PCI	Frame	Slot	MCS	Rbs	RV	HARQ Id	RNTI Type	CRC Status
+186	439	12	5	12	0	1	0	PASS
 ```
